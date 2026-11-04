@@ -9,7 +9,7 @@ Note: Tested on MacOS.
 python Image_Organizer.py <Input Directory> <Output Director>
 
 ## Example:
-python Image_Organizer.py /Path/To/Input /Path/To/Output
+python Image_Organizer.py </Path/To/Input> </Path/To/Output>
 
 Input Folder Structure
 ```
