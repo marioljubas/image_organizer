@@ -19,8 +19,6 @@ def main():
             '#######################')
     print(f"Checking {input_path}")
 
-    #file_types = ["DNG", "JPG", "RW2"]
-    #file_extensions = ["*.DNG", "*.JPG", "*.RW2"]
     file_types = []
     file_extensions = []
 
