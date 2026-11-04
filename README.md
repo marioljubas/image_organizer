@@ -8,10 +8,11 @@ Note: Tested on MacOS.
 
 python Image_Organizer.py <Input Directory> <Output Director>
 
+
 ## Example:
 python3 Image_Organizer.py </Path/To/Input> </Path/To/Output>
 
-Input Folder Structure
+Files and folders discovered in </Path/To/Input>.
 ```
 ├── 100US100
 │   ├── L1000001.DNG
@@ -28,7 +29,7 @@ Input Folder Structure
     ├── L1000008.DNG
 ```
 
-Output Folder Structure
+New folder structure created in </Path/To/Output>. Files are copied to appropriate path based on containing folder, file type and mod time.
 ```
 ├── 100US100
 │   ├── DNG
