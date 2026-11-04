@@ -8,9 +8,8 @@ Note: Tested on MacOS.
 
 ```python3 Image_Organizer.py <Input Directory> <Output Director>```
 
-
 ## Example:
-python3 Image_Organizer.py </Path/To/Input> </Path/To/Output>
+```python3 Image_Organizer.py </Path/To/Input> </Path/To/Output>```
 
 Files and folders discovered in </Path/To/Input>.
 ```
