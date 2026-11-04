@@ -7,7 +7,7 @@ from time import localtime, strftime
 
 
 def main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
       print("Usage: python Image_Organizer.py <Input Directory> <Output Directory> <File Types>")
       sys.exit(1)
 
