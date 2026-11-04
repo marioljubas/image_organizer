@@ -8,75 +8,84 @@ from time import localtime, strftime
 
 def main():
     if len(sys.argv) < 3:
-      print("Usage: python Image_Organizer.py <Input Directory> <Output Directory>")
+      print("Usage: python Image_Organizer.py <Input Directory> <Output Directory> <File Types>")
       sys.exit(1)
 
     input_path = sys.argv[1]
     output_path = sys.argv[2]
-    filetypes = set()
-    combined_mod_times = set()
-    combined_subdirs = set()
-    all_files = set()
-    dng_input_glob = input_path + os.sep + "**" + os.sep +"*.DNG"
-    jpg_input_glob = input_path + os.sep + "**" + os.sep +"*.JPG"
 
     print('#######################\n'
             '### Image Organizer ###\n'
             '#######################')
-    print(f"Checking {input_path} for .DNG and .JPG files...")
+    print(f"Checking {input_path}")
 
-    # Gather matching file(s).
-    dng_files = glob.glob(dng_input_glob, recursive=True)
-    jpg_files = glob.glob(jpg_input_glob, recursive=True)
+    #file_types = ["DNG", "JPG", "RW2"]
+    #file_extensions = ["*.DNG", "*.JPG", "*.RW2"]
+    file_types = []
+    file_extensions = []
 
-    # Create discovery message(s).
-    found_message_dng = f"{len(dng_files)} DNG file(s) in {len(get_subdirectory(dng_files))} folder(s)"
-    found_message_jpg = f"{len(jpg_files)} JPG file(s) in {len(get_subdirectory(jpg_files))} folder(s)"
+    for type in sys.argv[3].split(","):
+        file_types.append(type)
 
-    # Print discovery messages and populate filetypes set with types seen.
-    if len(dng_files) > 0 and len(jpg_files) > 0:
-        print(f"Found {found_message_dng} and {found_message_jpg}")
-        filetypes = {"DNG","JPG"}
-    elif len(dng_files) > 0 and len(jpg_files) == 0:
-        print(f"Found {found_message_dng}")
-        filetypes = {"DNG"}
-    elif len(dng_files) == 0 and len(jpg_files) > 0:
-        print(f"Found {found_message_jpg}")
-        filetypes = {"JPG"}
-    else:
+    print(file_types)
+
+    for type in file_types:
+        file_extensions.append("*." + type)
+
+    file_lists = {}
+    input_globs = {}
+    found_messages = {}
+    file_mod_times = {}
+    file_subdirs = {}
+
+    discovered_filetypes = set()
+    combined_mod_times = set()
+    combined_subdirs = set()
+    all_files = set()
+
+    for i, file_type in enumerate(file_types):
+        input_globs[i] = input_path + os.sep + "**" + os.sep + file_extensions[i]
+        file_lists[i] = glob.glob(input_globs[i], recursive=True)
+
+        if len(file_lists[i]) > 0:
+            discovered_filetypes.add(file_type)
+            found_messages[i] = f"{len(file_lists[i])} {file_type} file(s) in {len(get_subdirectory(file_lists[i]))} folder(s)"
+            file_mod_times[i] = get_file_mod_time(file_lists[i])
+            file_subdirs[i] = get_subdirectory(file_lists[i])
+
+    # Exit if no files of expected type(s) have been discovered.
+    if len(discovered_filetypes) == 0:
         print("No files found")
         sys.exit(1)
+    else:
+        for v in found_messages.values():
+            print(v)
 
-    # Iterate through list of discovered files and build set of mod times.
-    dng_mod_times = get_file_mod_time(dng_files)
-    jpg_mod_times = get_file_mod_time(jpg_files)
-    combined_mod_times.update(dng_mod_times)
-    combined_mod_times.update(jpg_mod_times)
+    for v in file_mod_times.values():
+        combined_mod_times.update(v)
     combined_mod_times = sorted(combined_mod_times)
 
-    # Iterate through list of discovered files and pull subdirectory containing images.
-    dng_subdirs = get_subdirectory(dng_files)
-    jpg_subdirs = get_subdirectory(jpg_files)
-    combined_subdirs.update(dng_subdirs)
-    combined_subdirs.update(jpg_subdirs)
+    for v in file_subdirs.values():
+        combined_subdirs.update(v)
     combined_subdirs = sorted(combined_subdirs)
 
-    # Create set of all input files.
-    all_files.update(dng_files)
-    all_files.update(jpg_files)
-    all_files = sorted(all_files)
+    for v in file_lists.values():
+        all_files.update(v)
+    all_files = sorted(all_files
+    )
 
     # Captures list of created directories for later cleanup of empty dirs.
-    created_directories = sorted(create_output_dirs(output_path, combined_subdirs, combined_mod_times, filetypes))
+    created_directories = sorted(create_output_dirs(output_path, combined_subdirs, combined_mod_times, discovered_filetypes))
 
     # Copy all input files to correspodning folder in output_path.
-    copy_files(all_files, filetypes, created_directories, output_path)
+    copy_files(all_files, discovered_filetypes, created_directories, output_path)
 
     # Remove any directory that was created but not used.
     remove_empty_directories(created_directories)
 
     # Done!
     print("Done!")
+
 def get_file_mod_time(files):
     unique_dates = set()
     for file in files:
@@ -121,18 +130,17 @@ def copy_files(files, filetype, created_directories, output_path):
                         num_moved_files += 1
             else:
                 continue
-    print(f"Copied {len(moved_files)} {filetype} files")
 
 def remove_empty_directories(created_directories):
     print("Cleaning up directories")
     for directory in created_directories:
         try:
             os.rmdir(directory)
-        except OSError as error:
+        except OSError:
             continue
         try:
             os.rmdir(os.path.dirname(directory))
-        except OSError as error:
+        except OSError:
             continue
 
 if __name__ == "__main__":

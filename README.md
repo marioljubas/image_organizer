@@ -1,15 +1,17 @@
 # Image_Organizer
 
-A python tool to organize and copy DNG/JPG images based on image type, mod time and containing directory.
+A python tool to organize and copy image files based on file type, mod time and containing directory.
+
+While this tool is primarily intended to help organize image files (e.g., when dumping camera SD cards) it will accept a comma separated list of any file extensions and perform the same function.
 
 ## Usage:
 
-```python3 Image_Organizer.py <Input Directory> <Output Director>```
+```python3 Image_Organizer.py <Input Directory> <Output Director> <File Types>```
 
 ## Example:
-```python3 Image_Organizer.py </Path/To/Input> </Path/To/Output>```
+```python3 Image_Organizer.py /Path/To/Input /Path/To/Output DNG,JPG```
 
-Files and folders discovered in </Path/To/Input>.
+Files and folders discovered in /Path/To/Input.
 ```
 ├── 100US100
 │   ├── L1000001.DNG
@@ -26,7 +28,7 @@ Files and folders discovered in </Path/To/Input>.
     ├── L1000008.DNG
 ```
 
-New folder structure created in </Path/To/Output>. Files are copied to appropriate path based on containing folder, file type and mod time.
+New folder structure created in /Path/To/Output. Files are copied to appropriate path based on containing folder, file type and mod time.
 ```
 ├── 100US100
 │   ├── DNG
