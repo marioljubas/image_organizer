@@ -2,8 +2,6 @@
 
 A python tool to organize and copy DNG/JPG images based on image type, mod time and containing directory.
 
-Note: Tested on MacOS.
-
 ## Usage:
 
 ```python3 Image_Organizer.py <Input Directory> <Output Director>```
