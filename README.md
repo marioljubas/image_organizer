@@ -6,7 +6,7 @@ Note: Tested on MacOS.
 
 ## Usage:
 
-python Image_Organizer.py <Input Directory> <Output Director>
+python3 Image_Organizer.py <Input Directory> <Output Director>
 
 
 ## Example:
